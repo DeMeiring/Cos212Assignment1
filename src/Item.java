@@ -7,6 +7,15 @@ Importing Java's built in data structures will result in a mark of 0. */
 
 public class Item
 {
+	public Item back; // The next Item (back) of this to-do list on the same date
+	public Item right; // The next Item (right) of this Item on the same day (1st to 31st).
+	public Item down; // The next Item (down) of this Item in the same month.
+
+	//Item particulars:
+	private String description; // A description for this Item.
+	private String duration; // The number of minutes/hours that the Item will take.
+	private int priority; // The priority of the Item.
+
 	public Item()
 	{
 		/*You may implement this constructor to suit your needs, or you may add additional constructors. 
@@ -17,11 +26,13 @@ public class Item
 	public void setDescription(String desc)
 	{
 		/* Implement this method to set the description for this Item */
+		this.description = desc;
 	}	
 	
 	public void setDuration(String dur)
 	{
 		/* Implement this method to set the duration of this Item */
+		this.duration = dur;
 	}	
 	
 	public void setPriority(int p)
@@ -30,6 +41,7 @@ public class Item
 		where the default priority of zero (0) corresponds to lowest priority.
 		The higher the priority, the closer the Item has to be to the 
 		head of the list. */
+		this.priority = p;
 	}
 	
 	public String getDescription()
@@ -49,15 +61,5 @@ public class Item
 		/* This method returns the duration of this Item */
 		return priority;
 	}
-	
-	
-	public Item back; // The next Item (back) of this to-do list on the same date
-	public Item right; // The next Item (right) of this Item on the same day (1st to 31st).
-	public Item down; // The next Item (down) of this Item in the same month.
-	
-	//Item particulars:
-	private String description; // A description for this Item.
-	private String duration; // The number of minutes/hours that the Item will take.
-	private int priority; // The priority of the Item.
-	
+
 }
