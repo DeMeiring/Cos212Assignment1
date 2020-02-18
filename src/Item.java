@@ -20,8 +20,25 @@ public class Item
 	{
 		/*You may implement this constructor to suit your needs, or you may add additional constructors. 
 		This is the constructor which will be used for marking. 
-		Note: priority should be set to zero by default. */ 		
-	}	
+		Note: priority should be set to zero by default. */
+		priority=0;
+		back = null;
+		right=null;
+		down=null;
+	}
+
+	//tester constructors ==============================================================================================
+	Item(String duration,String description,int priority){	//test constructor to set desc, duration and priority
+		setPriority(priority);
+		setDuration(duration);
+		setDescription(description);
+	}
+
+	Item(int priority){	//test constructor for only priority as variable in construction
+		setDescription("this is the default description for now");
+		setDuration("2 hours");
+	}
+	//end of tester constructors========================================================================================
 	
 	public void setDescription(String desc)
 	{
