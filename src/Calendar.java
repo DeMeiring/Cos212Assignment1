@@ -8,9 +8,14 @@ Importing Java's built in data structures will result in a mark of zero. Only th
 
 public class Calendar
 {
+
+	private Item[] dayArr = new Item[31];
+	private Item[] monthArr = new Item[12];
 	public Calendar()
 	{
-		/*You may implement this constructor to suit your needs, or you may add additional constructors.  This is the constructor which will be used for marking*/ 
+		/*You may implement this constructor to suit your needs, or you may add additional constructors.  This is the constructor which will be used for marking*/
+		createDay();
+		createMonth();
 	}
 	
 	/*Insertion*/
@@ -83,5 +88,51 @@ public class Calendar
 		If no such Item exists, return null*/
 		
 		return null;
-	}	
+	}
+	//============================================helper functions =====================================================
+	public void createDay(){
+		int d =1;	//var for the actual day count in the array
+		for(int i=0;i<31;i++){		//loop through all the days creating a list of days to right
+			Item curr = new Item();
+			String day = String.valueOf(d);
+			curr.setDescription(day);
+			this.dayArr[i] = curr;
+			d++;
+		}
+	}
+
+	public void createMonth(){
+		for(int i=0;i<12;i++){
+			Item curr = new Item();
+			switch(i){
+				case 0: curr.setDescription("January");
+					break;
+				case 1: curr.setDescription("February");
+					break;
+				case 2: curr.setDescription("March");
+					break;
+				case 3: curr.setDescription("April");
+					break;
+				case 4: curr.setDescription("May");
+					break;
+				case 5: curr.setDescription("June");
+					break;
+				case 6: curr.setDescription("July");
+					break;
+				case 7: curr.setDescription("August");
+					break;
+				case 8: curr.setDescription("September");
+					break;
+				case 9: curr.setDescription("October");
+					break;
+				case 10: curr.setDescription("November");
+					break;
+				case 11: curr.setDescription("December");
+					break;
+			}
+			this.monthArr[i] = curr;
+		}
+	}
+
+
 }
