@@ -34,10 +34,6 @@ public class Item
 		setDescription(description);
 	}
 
-	Item(int priority){	//test constructor for only priority as variable in construction
-		setDescription("this is the default description for now");
-		setDuration("2 hours");
-	}
 	//end of tester constructors========================================================================================
 	
 	public void setDescription(String desc)

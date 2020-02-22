@@ -25,6 +25,22 @@ public class Calendar
 		/* Insert an Item at the given day and month combination according to priority. Intialize the Item with the remainder of the parameters.
 		
 		Duplicate Items are allowed.*/
+		//==================================Set Indexes===========================================================
+		int[] Indexes = findIndexesArray(day,month);
+		int monthIndex = Indexes[0];
+		int dayIndex = Indexes[1];
+		//==================================End of Set Indexes===========================================================
+		//==================================create new Item==============================================================
+		Item newItem = new Item();
+		newItem.setDescription(description);
+		newItem.setDuration(duration);
+		newItem.setPriority(priority);
+		//==================================End of create new Item==============================================================
+		if(monthArr[monthIndex].down==null && dayArr[dayIndex].right==null){	//there does not exist an item at that day of the month
+			monthArr[monthIndex].down=newItem;
+			dayArr[dayIndex].right = newItem;
+		}
+
 	}
 	
 	/*Deletion*/
@@ -132,6 +148,41 @@ public class Calendar
 			}
 			this.monthArr[i] = curr;
 		}
+	}
+
+
+	public int[] findIndexesArray(int d,String month){
+		int[] indexArr = new int[2];	//array to be used to send back array with correct indexes
+		String day = String.valueOf(d);
+		//================================find indexes======================================
+		for(int i=0;i<12;i++){
+			if(monthArr[i].getDescription().equals(month)){
+				indexArr[0]=i;	//set index for 0(month index) for correct month
+			}
+		}
+		for(int j=0;j<31;j++){
+			if(dayArr[j].getDescription().equals(day)){
+				indexArr[1]=j;	//set index for 1(day) for correct day
+			}
+		}
+		//================================End of find indexes======================================
+		return indexArr;
+	}
+
+	public Item getDayNext(int day){	//get immediate next of that day
+		int dayIndex = day-1;
+		return dayArr[dayIndex].right;
+	}
+
+	public Item getMonthNext(String month){	//get immediate next of that month
+		int monthIndex=0;
+		for(int i=0;i<12;i++){
+			if(monthArr[i].getDescription().equals(month)){
+				monthIndex=i;
+				return monthArr[monthIndex].down;
+			}
+		}
+		return null;
 	}
 
 
