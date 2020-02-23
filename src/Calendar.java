@@ -52,21 +52,38 @@ public class Calendar
 		}else{	//if both month and day are not empty
 			Item currMonth,currDay;
 			if(isOccupied(day,month)){	//check if the slot is occupied
-				Item dNode,mNode,curr,prev;
+				Item dNode,mNode,dayPrev,monthPrev;
 				dNode=getDayHead(day);
 				mNode=getMonthHead(month);
-				while(dNode.right!=null && mNode.down!=null && !dNode.getDescription().equals(mNode.getDescription())){
-					dNode=dNode.right;
-					mNode=mNode.down;
+				while (!dNode.getDescription().equals(mNode.getDescription())){
+					if(dNode.right!=null){
+						dNode=dNode.right;
+					}else if(mNode.down!=null){
+						mNode=mNode.down;
+					}
 				}
 				if(dNode.getDescription().equals(mNode.getDescription())){	//at item intersection
-					prev=curr=dNode;
 					//must loop through back list and prioritise
-					LoopBack(newItem,dNode);
+					if(getMonthHead(month).down.getDescription().equals(mNode.getDescription())){
+						dayPrev=getMonthHead(month);
+					}else{
+						dayPrev = getMonthHead(month);
+						while(!dayPrev.down.getDescription().equals(mNode.getDescription())&&dayPrev.down!=null){
+							dayPrev=dayPrev.down;
+						}
+					}
+
+					if(getDayHead(day).right.getDescription().equals(dNode.getDescription())){
+						monthPrev = getDayHead(day);
+					}else{
+						monthPrev = getDayHead(day);
+						while(!monthPrev.right.getDescription().equals(dNode.getDescription()) && monthPrev.right!=null){
+							monthPrev=monthPrev.right;
+						}
+					}
+
+					LoopBack(newItem,dNode,dayPrev,monthPrev);
 				}
-			}else{	//no item intersection, hence just add item to avail slot
-				currDay=recSearchDaySlot(dayArr[dayIndex]);
-				currMonth=recSearchMonthSlot(monthArr[monthIndex]);
 			}
 		}
 
@@ -257,6 +274,10 @@ public class Calendar
 		}
 	}
 
+	public void printBackDay(int day){
+
+	}
+
 	public Item recSearchDaySlot(Item dayNode){
 		if(dayNode.right==null){
 			return dayNode;
@@ -274,29 +295,51 @@ public class Calendar
 
 
 
-	public void LoopBack(Item newNode,Item node){
+	public void LoopBack(Item newNode,Item node,Item dayPrev,Item monthPrev){
 		Item curr,prev;
 		prev=curr=node;
 		if(node.back==null){	//only one item in slot
 			if(curr.getPriority()>newNode.getPriority()){
 				curr.back=newNode;
+				return;
 			}else{
 				newNode.right = curr.right;
 				newNode.down = curr.down;
 				newNode.back = curr;
+				dayPrev.down=newNode;	//previous day is vertically determined
+				monthPrev.right=newNode;	//previous month is horizontally determined
 				curr.right=null;
 				curr.down=null;
+				return;
 			}
-		}else{
-			while(curr.back!=null && curr.getPriority()>newNode.getPriority()){
-				prev=curr;
-				curr=curr.back;
-			}
-			if(curr.back==null){	//last item in the list but still has higher priority
-				curr.back = newNode;
-			}else{
-				prev.back=newNode;
-				newNode.back = curr;
+		}else{	//more than one item in slot
+			if(curr.getPriority()<newNode.getPriority()){
+				newNode.right = curr.right;
+				newNode.down = curr.down;
+				newNode.back=curr;
+				dayPrev.down= newNode;
+				monthPrev.right=newNode;
+				return;
+			}else {
+				while (curr.back != null) {
+					if(curr.getPriority()==newNode.getPriority()){	//newNode has same priority as curr then just add to back of curr
+						newNode.back=curr.back;
+						curr.back=newNode;
+						return;
+					}else if(curr.getPriority()>newNode.getPriority()){
+						prev=curr;
+						curr=curr.back;
+					}else{
+						break;
+					}
+				}
+				if(curr.getPriority()<newNode.getPriority()){	//at end if the list and curr's priority is less than newNodes
+					newNode.back=curr;
+					prev.back=newNode;
+				}else{	//at end of list and curr has greater priority than newNode ,hence just add to back
+					curr.back=newNode;
+				}
+
 			}
 
 		}
@@ -306,9 +349,12 @@ public class Calendar
 		Item dNode,mNode;
 		dNode=getDayHead(day);
 		mNode=getMonthHead(month);
-		while (dNode.right!=null && mNode.down!=null && !dNode.getDescription().equals(mNode.getDescription())){
-			dNode=dNode.right;
-			mNode=mNode.down;
+		while (!dNode.getDescription().equals(mNode.getDescription())){
+			if(dNode.right!=null){
+				dNode=dNode.right;
+			}else if(mNode.down!=null){
+				mNode=mNode.down;
+			}
 		}
 		if(dNode.getDescription().equals(mNode.getDescription())){
 			return true;
