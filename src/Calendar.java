@@ -39,10 +39,38 @@ public class Calendar
 		if(monthArr[monthIndex].down==null && dayArr[dayIndex].right==null){	//there does not exist an item at that day of the month
 			monthArr[monthIndex].down=newItem;
 			dayArr[dayIndex].right = newItem;
+		}else if(monthArr[monthIndex].down!=null && dayArr[dayIndex].right==null){	//case where there is no item on that day but there are items in that month
+			dayArr[dayIndex].right = newItem;	//create new Item for that day
+			Item currMonth;
+			currMonth = recSearchMonthSlot(monthArr[monthIndex].down);
+			currMonth.down = newItem;
+		}else if(monthArr[monthIndex].down==null && dayArr[dayIndex].right!=null){	//if month has no events but day has other events
+			monthArr[monthIndex].down=newItem;
+			Item currDay;
+			currDay = recSearchDaySlot(dayArr[dayIndex].right);
+			currDay.right=newItem;
+		}else{	//if both month and day are not empty
+			Item currMonth,currDay;
+			if(isOccupied(day,month)){	//check if the slot is occupied
+				Item dNode,mNode,curr,prev;
+				dNode=getDayHead(day);
+				mNode=getMonthHead(month);
+				while(dNode.right!=null && mNode.down!=null && !dNode.getDescription().equals(mNode.getDescription())){
+					dNode=dNode.right;
+					mNode=mNode.down;
+				}
+				if(dNode.getDescription().equals(mNode.getDescription())){	//at item intersection
+					prev=curr=dNode;
+					//must loop through back list and prioritise
+					LoopBack(newItem,dNode);
+				}
+			}else{	//no item intersection, hence just add item to avail slot
+				currDay=recSearchDaySlot(dayArr[dayIndex]);
+				currMonth=recSearchMonthSlot(monthArr[monthIndex]);
+			}
 		}
 
 	}
-	
 	/*Deletion*/
 	
 	public Item deleteItem(int day, String month, String description)
@@ -102,8 +130,12 @@ public class Calendar
 	{
 		/*Return the head Item for the day passed as a parameter.
 		If no such Item exists, return null*/
-		
-		return null;
+		Item dNode;
+		dNode = getDayHead(day);
+		if(dNode.right==null){
+			return null;
+		}else
+		return dNode.right;
 	}
 	//============================================helper functions =====================================================
 	public void createDay(){
@@ -112,7 +144,7 @@ public class Calendar
 			Item curr = new Item();
 			String day = String.valueOf(d);
 			curr.setDescription(day);
-			this.dayArr[i] = curr;
+			dayArr[i] = curr;
 			d++;
 		}
 	}
@@ -146,7 +178,7 @@ public class Calendar
 				case 11: curr.setDescription("December");
 					break;
 			}
-			this.monthArr[i] = curr;
+			monthArr[i] = curr;
 		}
 	}
 
@@ -158,32 +190,130 @@ public class Calendar
 		for(int i=0;i<12;i++){
 			if(monthArr[i].getDescription().equals(month)){
 				indexArr[0]=i;	//set index for 0(month index) for correct month
+				break;
 			}
 		}
 		for(int j=0;j<31;j++){
 			if(dayArr[j].getDescription().equals(day)){
 				indexArr[1]=j;	//set index for 1(day) for correct day
+				break;
 			}
 		}
 		//================================End of find indexes======================================
 		return indexArr;
 	}
 
-	public Item getDayNext(int day){	//get immediate next of that day
-		int dayIndex = day-1;
-		return dayArr[dayIndex].right;
+	public Item getDayHead(int day){	//retrun head of list for that day
+		return dayArr[day-1];
 	}
 
-	public Item getMonthNext(String month){	//get immediate next of that month
-		int monthIndex=0;
-		for(int i=0;i<12;i++){
-			if(monthArr[i].getDescription().equals(month)){
-				monthIndex=i;
-				return monthArr[monthIndex].down;
-			}
+	public Item getMonthHead(String month){		//return head of list for that month
+		int index =0;
+		switch(month){
+			case "January":index = 0;
+				break;
+			case "February":index = 1;
+				break;
+			case "March":index = 2;
+				break;
+			case "April":index = 3;
+				break;
+			case "May":index = 4;
+				break;
+			case "June":index = 5;
+				break;
+			case "July":index = 6;
+				break;
+			case "August":index = 7;
+				break;
+			case "September":index = 8;
+				break;
+			case "October":index = 9;
+				break;
+			case "November":index = 10;
+				break;
+			case "December":index = 11;
+				break;
 		}
-		return null;
+		return monthArr[index];
 	}
 
+	public void printMonth(Item node){
+		if(node.down==null){
+			System.out.println(node.getDescription());
+			return;
+		}else
+			System.out.println(node.getDescription());
+			printMonth(node.down);
+	}
+
+	public void printDay(Item node){
+		if(node.right==null){
+			System.out.println(node.getDescription());
+			return;
+		}else{
+			System.out.println(node.getDescription());
+			printDay(node.right);
+		}
+	}
+
+	public Item recSearchDaySlot(Item dayNode){
+		if(dayNode.right==null){
+			return dayNode;
+		}else{
+			return recSearchDaySlot(dayNode.right);
+		}
+	}
+
+	public Item recSearchMonthSlot(Item monthNode){
+		if(monthNode.down==null){
+			return monthNode;
+		}else	return recSearchMonthSlot(monthNode.down);
+	}
+
+
+
+
+	public void LoopBack(Item newNode,Item node){
+		Item curr,prev;
+		prev=curr=node;
+		if(node.back==null){	//only one item in slot
+			if(curr.getPriority()>newNode.getPriority()){
+				curr.back=newNode;
+			}else{
+				newNode.right = curr.right;
+				newNode.down = curr.down;
+				newNode.back = curr;
+				curr.right=null;
+				curr.down=null;
+			}
+		}else{
+			while(curr.back!=null && curr.getPriority()>newNode.getPriority()){
+				prev=curr;
+				curr=curr.back;
+			}
+			if(curr.back==null){	//last item in the list but still has higher priority
+				curr.back = newNode;
+			}else{
+				prev.back=newNode;
+				newNode.back = curr;
+			}
+
+		}
+	}
+
+	public boolean isOccupied(int day, String month){	//function to see if slot is occupied
+		Item dNode,mNode;
+		dNode=getDayHead(day);
+		mNode=getMonthHead(month);
+		while (dNode.right!=null && mNode.down!=null && !dNode.getDescription().equals(mNode.getDescription())){
+			dNode=dNode.right;
+			mNode=mNode.down;
+		}
+		if(dNode.getDescription().equals(mNode.getDescription())){
+			return true;
+		}else
+			return false;
+	}
 
 }
