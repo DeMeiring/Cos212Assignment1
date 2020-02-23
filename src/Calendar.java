@@ -23,9 +23,10 @@ public class Calendar
 	public void addItem(int day, String month, String description, String duration, int priority)
 	{
 		/* Insert an Item at the given day and month combination according to priority. Intialize the Item with the remainder of the parameters.
-		
+
 		Duplicate Items are allowed.*/
 		//==================================Set Indexes===========================================================
+
 		int[] Indexes = findIndexesArray(day,month);
 		int monthIndex = Indexes[0];
 		int dayIndex = Indexes[1];
@@ -40,10 +41,12 @@ public class Calendar
 			monthArr[monthIndex].down=newItem;
 			dayArr[dayIndex].right = newItem;
 		}else if(monthArr[monthIndex].down!=null && dayArr[dayIndex].right==null){	//case where there is no item on that day but there are items in that month
-			dayArr[dayIndex].right = newItem;	//create new Item for that day
-			Item currMonth;
-			currMonth = recSearchMonthSlot(monthArr[monthIndex].down);
-			currMonth.down = newItem;
+			int count=0;
+			while(dayArr[count]==null){
+				count++
+			}
+
+
 		}else if(monthArr[monthIndex].down==null && dayArr[dayIndex].right!=null){	//if month has no events but day has other events
 			monthArr[monthIndex].down=newItem;
 			Item currDay;
@@ -131,8 +134,32 @@ public class Calendar
 	public Item getItem(int day, String month)
 	{
 		/*Return the head Item of the day and month. If no such Item exists, return null*/
-		
-		return null;
+		if(!isOccupied(day,month)){	//no item at that intersection
+			return null;
+		}else{	//does contain intersection
+			Item dNode,mNode;
+			mNode = getMonthHead(month);
+			dNode = getDayHead(day);
+			while(dNode!=mNode){	//loop through corresponding month and day list
+				if(dNode.right !=null){
+					dNode=dNode.right;
+				}else if(mNode.down!=null){
+					mNode=mNode.down;
+				}else{
+					break;
+				}
+			}
+			if(dNode==mNode) {
+				Item retItem = new Item();
+				retItem.setPriority(dNode.getPriority());
+				retItem.setDuration(dNode.getDuration());
+				retItem.setDescription(dNode.getDescription());
+				retItem.back = dNode.back;
+				retItem.right = dNode.right;
+				retItem.down = dNode.down;
+				return retItem;
+			}else return null;
+		}
 	}
 	
 	public Item getMonthItem(String month)
@@ -170,29 +197,29 @@ public class Calendar
 		for(int i=0;i<12;i++){
 			Item curr = new Item();
 			switch(i){
-				case 0: curr.setDescription("January");
+				case 0: curr.setDescription("JAN");
 					break;
-				case 1: curr.setDescription("February");
+				case 1: curr.setDescription("FEB");
 					break;
-				case 2: curr.setDescription("March");
+				case 2: curr.setDescription("MAR");
 					break;
-				case 3: curr.setDescription("April");
+				case 3: curr.setDescription("APR");
 					break;
-				case 4: curr.setDescription("May");
+				case 4: curr.setDescription("MAY");
 					break;
-				case 5: curr.setDescription("June");
+				case 5: curr.setDescription("JUN");
 					break;
-				case 6: curr.setDescription("July");
+				case 6: curr.setDescription("JUL");
 					break;
-				case 7: curr.setDescription("August");
+				case 7: curr.setDescription("AUG");
 					break;
-				case 8: curr.setDescription("September");
+				case 8: curr.setDescription("SEP");
 					break;
-				case 9: curr.setDescription("October");
+				case 9: curr.setDescription("OCT");
 					break;
-				case 10: curr.setDescription("November");
+				case 10: curr.setDescription("NOV");
 					break;
-				case 11: curr.setDescription("December");
+				case 11: curr.setDescription("DEC");
 					break;
 			}
 			monthArr[i] = curr;
@@ -201,6 +228,7 @@ public class Calendar
 
 
 	public int[] findIndexesArray(int d,String month){
+		month=month.toUpperCase();
 		int[] indexArr = new int[2];	//array to be used to send back array with correct indexes
 		String day = String.valueOf(d);
 		//================================find indexes======================================
@@ -225,31 +253,32 @@ public class Calendar
 	}
 
 	public Item getMonthHead(String month){		//return head of list for that month
+		month=month.toUpperCase();
 		int index =0;
 		switch(month){
-			case "January":index = 0;
+			case "JAN":index = 0;
 				break;
-			case "February":index = 1;
+			case "FEB":index = 1;
 				break;
-			case "March":index = 2;
+			case "MAR":index = 2;
 				break;
-			case "April":index = 3;
+			case "APR":index = 3;
 				break;
-			case "May":index = 4;
+			case "MAY":index = 4;
 				break;
-			case "June":index = 5;
+			case "JUN":index = 5;
 				break;
-			case "July":index = 6;
+			case "JUL":index = 6;
 				break;
-			case "August":index = 7;
+			case "AUG":index = 7;
 				break;
-			case "September":index = 8;
+			case "SEP":index = 8;
 				break;
-			case "October":index = 9;
+			case "OCT":index = 9;
 				break;
-			case "November":index = 10;
+			case "NOV":index = 10;
 				break;
-			case "December":index = 11;
+			case "DEC":index = 11;
 				break;
 		}
 		return monthArr[index];
@@ -274,10 +303,6 @@ public class Calendar
 		}
 	}
 
-	public void printBackDay(int day){
-
-	}
-
 	public Item recSearchDaySlot(Item dayNode){
 		if(dayNode.right==null){
 			return dayNode;
@@ -289,8 +314,11 @@ public class Calendar
 	public Item recSearchMonthSlot(Item monthNode){
 		if(monthNode.down==null){
 			return monthNode;
-		}else	return recSearchMonthSlot(monthNode.down);
+		}else
+			return recSearchMonthSlot(monthNode.down);
 	}
+
+
 
 
 
@@ -349,17 +377,21 @@ public class Calendar
 		Item dNode,mNode;
 		dNode=getDayHead(day);
 		mNode=getMonthHead(month);
-		while (!dNode.getDescription().equals(mNode.getDescription())){
+		while (true){
+			if(dNode==mNode){
+				return true;
+			}
 			if(dNode.right!=null){
 				dNode=dNode.right;
-			}else if(mNode.down!=null){
+			}
+			if(mNode.down!=null){
 				mNode=mNode.down;
 			}
+			if(dNode.right==null && mNode.down==null && dNode!=mNode){
+				return false;
+			}
 		}
-		if(dNode.getDescription().equals(mNode.getDescription())){
-			return true;
-		}else
-			return false;
 	}
+
 
 }

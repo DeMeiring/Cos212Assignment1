@@ -45,7 +45,21 @@ public class Item
 	public void setDuration(String dur)
 	{
 		/* Implement this method to set the duration of this Item */
-		this.duration = dur;
+		String sHours=dur.substring(0,2);
+		String sMins=dur.substring(3);
+		int iHours;
+		int iMins;
+		iHours = Integer.parseInt(sHours);
+		iMins = Integer.parseInt(sMins);
+		if(iHours==24 && iMins>0){
+			duration="00;00";
+		}else if(iMins>59 || iMins<0){
+			duration ="00;00";
+		}else if(iHours>24 || iHours<0){
+			duration="00:00";
+		}else{
+			this.duration = dur;
+		}
 	}	
 	
 	public void setPriority(int p)
@@ -54,7 +68,9 @@ public class Item
 		where the default priority of zero (0) corresponds to lowest priority.
 		The higher the priority, the closer the Item has to be to the 
 		head of the list. */
-		this.priority = p;
+		if(p<0){
+			this.priority=0;
+		}else this.priority = p;
 	}
 	
 	public String getDescription()
