@@ -42,16 +42,66 @@ public class Calendar
 			dayArr[dayIndex].right = newItem;
 		}else if(monthArr[monthIndex].down!=null && dayArr[dayIndex].right==null){	//case where there is no item on that day but there are items in that month
 			int count=0;
-			while(dayArr[count]==null){
-				count++
+			Item prevMonthPtr = monthArr[monthIndex];
+			Item currMonthPtr = monthArr[monthIndex];
+			while(dayArr[count].right==null){	//get initial first dayIndex with a right value
+				if(currMonthPtr.down!=null){
+					prevMonthPtr=currMonthPtr;
+					currMonthPtr=currMonthPtr.down;
+				}
+				count++;	//update index of first dayIndex with a right
 			}
-
-
+			if(count>dayIndex){	//if newItem day should come before the first day pointing to a right object
+				dayArr[dayIndex].right=newItem;
+				prevMonthPtr.down = newItem;
+				newItem.down=currMonthPtr;
+			}else{	//newItem's day is after first found index with day right object
+				while(dayIndex>count){	//search until found the right slot for the day insert
+					if(currMonthPtr.down!=null){	//update currmonthptr for each day that goes down if can
+						prevMonthPtr=currMonthPtr;
+						currMonthPtr=currMonthPtr.down;
+					}
+					count++;
+				}
+				dayArr[dayIndex].right=newItem;
+				if(currMonthPtr.down==null){	//no preceding events for thaat month then just insert newItem
+					currMonthPtr.down = newItem;
+				}else{	//interject between month nodes
+					prevMonthPtr.down=newItem;
+					newItem.down=currMonthPtr;
+				}
+			}
 		}else if(monthArr[monthIndex].down==null && dayArr[dayIndex].right!=null){	//if month has no events but day has other events
-			monthArr[monthIndex].down=newItem;
-			Item currDay;
-			currDay = recSearchDaySlot(dayArr[dayIndex].right);
-			currDay.right=newItem;
+			int count =0;
+			Item prevDayPtr,currDayPtr;
+			prevDayPtr=currDayPtr=dayArr[dayIndex];
+			while(monthArr[count].down==null){
+				if(currDayPtr.right!=null){
+					prevDayPtr=currDayPtr;
+					currDayPtr=currDayPtr.right;
+				}
+				count++;
+			}
+			if(count>monthIndex){
+				monthArr[monthIndex].down=newItem;
+				newItem.right=currDayPtr;
+				prevDayPtr.right=newItem;
+			}else{
+				monthArr[monthIndex].down=newItem;
+				while(dayIndex>count){
+					if(currDayPtr.right!=null){
+						prevDayPtr=currDayPtr;
+						currDayPtr=currDayPtr.right;
+					}
+					count++;
+				}
+				if(currDayPtr.right==null){
+					currDayPtr.right=newItem;
+				}else{
+					prevDayPtr.right=newItem;
+					newItem.right=currDayPtr;
+				}
+			}
 		}else{	//if both month and day are not empty
 			Item currMonth,currDay;
 			if(isOccupied(day,month)){	//check if the slot is occupied
