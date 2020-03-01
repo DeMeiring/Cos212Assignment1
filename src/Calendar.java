@@ -40,104 +40,230 @@ public class Calendar
 		if(monthArr[monthIndex].down==null && dayArr[dayIndex].right==null){	//there does not exist an item at that day of the month
 			monthArr[monthIndex].down=newItem;
 			dayArr[dayIndex].right = newItem;
-		}else if(monthArr[monthIndex].down!=null && dayArr[dayIndex].right==null){	//case where there is no item on that day but there are items in that month
-			int count=0;
-			Item prevMonthPtr = monthArr[monthIndex];
-			Item currMonthPtr = monthArr[monthIndex];
-			while(dayArr[count].right==null){	//get initial first dayIndex with a right value
-				if(currMonthPtr.down!=null){
-					prevMonthPtr=currMonthPtr;
-					currMonthPtr=currMonthPtr.down;
-				}
-				count++;	//update index of first dayIndex with a right
+		}else if(monthArr[monthIndex].down!=null && dayArr[dayIndex].right==null) {    //case where there is no item on that day but there are items in that month
+			dayArr[dayIndex].right = newItem;
+
+			int fcount=0,lcount=0;
+			Item dayPtr=dayArr[fcount];
+			Item prevMonth = monthArr[monthIndex];
+			Item first = monthArr[monthIndex].down;	//first intersection
+			Item last = first;
+			while(last.down!=null){	//get last intersection
+				last=last.down;
 			}
-			if(count>dayIndex){	//if newItem day should come before the first day pointing to a right object
-				dayArr[dayIndex].right=newItem;
-				prevMonthPtr.down = newItem;
-				newItem.down=currMonthPtr;
-			}else{	//newItem's day is after first found index with day right object
-				while(dayIndex>count){	//search until found the right slot for the day insert
-					if(currMonthPtr.down!=null){	//update currmonthptr for each day that goes down if can
-						prevMonthPtr=currMonthPtr;
-						currMonthPtr=currMonthPtr.down;
-					}
-					count++;
-				}
-				dayArr[dayIndex].right=newItem;
-				if(currMonthPtr.down==null){	//no preceding events for thaat month then just insert newItem
-					currMonthPtr.down = newItem;
-				}else{	//interject between month nodes
-					prevMonthPtr.down=newItem;
-					newItem.down=currMonthPtr;
+
+			while (dayPtr!=first){	//update fcount
+				if(dayPtr.right==null){
+					fcount++;
+					dayPtr=dayArr[fcount];
+				}else {
+					dayPtr=dayPtr.right;
 				}
 			}
-		}else if(monthArr[monthIndex].down==null && dayArr[dayIndex].right!=null){	//if month has no events but day has other events
-			int count =0;
-			Item prevDayPtr,currDayPtr;
-			prevDayPtr=currDayPtr=dayArr[dayIndex];
-			while(monthArr[count].down==null){
-				if(currDayPtr.right!=null){
-					prevDayPtr=currDayPtr;
-					currDayPtr=currDayPtr.right;
-				}
-				count++;
-			}
-			if(count>monthIndex){
-				monthArr[monthIndex].down=newItem;
-				newItem.right=currDayPtr;
-				prevDayPtr.right=newItem;
-			}else{
-				monthArr[monthIndex].down=newItem;
-				while(dayIndex>count){
-					if(currDayPtr.right!=null){
-						prevDayPtr=currDayPtr;
-						currDayPtr=currDayPtr.right;
-					}
-					count++;
-				}
-				if(currDayPtr.right==null){
-					currDayPtr.right=newItem;
+			lcount=fcount;
+			while(dayPtr!=last){
+				if(dayPtr.right==null){
+					lcount++;
+					dayPtr=dayArr[lcount];
 				}else{
-					prevDayPtr.right=newItem;
-					newItem.right=currDayPtr;
+					dayPtr=dayPtr.right;
 				}
 			}
+
+			if(fcount>dayIndex){	//day index is before first intersection
+				monthArr[monthIndex].down=newItem;
+				newItem.down=first;
+			}else if(dayIndex>lcount){
+				last.down=newItem;
+			}else if(first.down==last && dayIndex>fcount && dayIndex<lcount){
+				first.down=newItem;
+				newItem.down = last;
+			}else{
+				dayPtr=dayArr[fcount];
+				while (true){
+					if(first.down!=last && first.down!=null)
+						first=first.down;
+					while (dayPtr!=first){
+						if(dayPtr.right==null){
+							fcount++;
+							dayPtr=dayArr[fcount];
+						}else{
+							dayPtr=dayPtr.right;
+						}
+					}
+					if(fcount>=dayIndex){
+						break;
+					}
+				}
+				first.down=newItem;
+				newItem.down=last;
+			}
+
+
+
+
+
+		}else if(monthArr[monthIndex].down==null && dayArr[dayIndex].right!=null){	//if month has no events but day has other events
+			monthArr[monthIndex].down=newItem;
+
+			int fcount=0,lcount=0;
+			Item monthPtr = monthArr[fcount];
+			Item first = dayArr[dayIndex].right;
+			Item last=first;
+			while (last.right!=null){
+				last=last.right;
+			}
+			while(monthPtr!=first){
+				if(monthPtr.down==null){
+					fcount++;
+					monthPtr=monthArr[fcount];
+				}else
+					monthPtr=monthPtr.down;
+
+			}
+			lcount=fcount;
+			while (monthPtr!=last){
+				if(monthPtr.down==null){
+					lcount++;
+					monthPtr=monthArr[lcount];
+				}else
+					monthPtr=monthPtr.down;
+			}
+
+			if(fcount>monthIndex){
+				dayArr[dayIndex].right = newItem;
+				newItem.right=first;
+			}else if(monthIndex>lcount){
+				last.right=newItem;
+			}else if(fcount<monthIndex && monthIndex<lcount && first.right==last){
+				first.right=newItem;
+				newItem.right=last;
+			}else{
+				monthPtr=monthArr[fcount];
+				while (true){
+					if(first.right!=last && first.right!=null)
+						first=first.right;
+					while (monthPtr!=first){
+						if(monthPtr.down==null){
+							fcount++;
+							monthPtr=monthArr[fcount];
+						}else{
+							monthPtr=monthPtr.down;
+						}
+					}
+					if(fcount>=monthIndex){
+						break;
+					}
+				}
+				first.right=newItem;
+				newItem.right=last;
+			}
+
+
+
+
 		}else{	//if both month and day are not empty
-			Item currMonth,currDay;
-			if(isOccupied(day,month)){	//check if the slot is occupied
-				Item dNode,mNode,dayPrev,monthPrev;
-				dNode=getDayHead(day);
-				mNode=getMonthHead(month);
-				while (!dNode.getDescription().equals(mNode.getDescription())){
-					if(dNode.right!=null){
-						dNode=dNode.right;
-					}else if(mNode.down!=null){
-						mNode=mNode.down;
+			if(!isOccupied(day, month)) {	//no item is already in the slot
+				Item monthptr = monthArr[monthIndex], dayptr = dayArr[dayIndex];
+				Item prevMonth = monthArr[monthIndex], currMonth = monthArr[monthIndex].down;
+				Item prevDay = dayArr[dayIndex], currDay = dayArr[dayIndex].right;
+				//do day figure out first
+				int dCount = 0;
+				int mCount = 0;
+				while (dayArr[dCount].right == null) {    //find index of first day poiniting to item
+					if (currMonth.down != null) {    //update month pointers for each day that goes down
+						prevMonth = currMonth;
+						currMonth = currMonth.down;
 					}
+					dCount++;
 				}
-				if(dNode.getDescription().equals(mNode.getDescription())){	//at item intersection
-					//must loop through back list and prioritise
-					if(getMonthHead(month).down.getDescription().equals(mNode.getDescription())){
-						dayPrev=getMonthHead(month);
-					}else{
-						dayPrev = getMonthHead(month);
-						while(!dayPrev.down.getDescription().equals(mNode.getDescription())&&dayPrev.down!=null){
-							dayPrev=dayPrev.down;
+
+				while (monthArr[mCount].down == null) {    //find index of first month pointing to item
+					if (currDay.right != null) {    //update day pointers for each month that goes right
+						prevDay = currDay;
+						currDay = currDay.right;
+					}
+					mCount++;
+				}
+
+				if (dCount > dayIndex && mCount > monthIndex) {
+					prevMonth.down = newItem;
+					newItem.down = currMonth;
+					prevDay.right = newItem;
+					newItem.right=currDay;
+
+				}else if(dCount<dayIndex && mCount>monthIndex){
+					while(dCount!=dayIndex){	//update dcount till matches the desired day index
+						if(currMonth.down!=null){
+							prevMonth=currMonth;
+							currMonth=currMonth.down;
 						}
+						dCount++;
+					}
+					if(currMonth.down!=null){
+						prevMonth.down=newItem;
+						newItem.down=currMonth;
+						prevDay.right=newItem;
+						newItem.right=currDay;
+					}else{
+						currMonth.down=newItem;
+						prevDay.right=newItem;
+						newItem.right=currDay;
 					}
 
-					if(getDayHead(day).right.getDescription().equals(dNode.getDescription())){
-						monthPrev = getDayHead(day);
-					}else{
-						monthPrev = getDayHead(day);
-						while(!monthPrev.right.getDescription().equals(dNode.getDescription()) && monthPrev.right!=null){
-							monthPrev=monthPrev.right;
+				}else if(dCount>dayIndex && mCount<monthIndex){
+					while(mCount!=monthIndex){
+						if(currDay.right!=null){
+							prevDay=currDay;
+							currDay=currDay.right;
 						}
+						mCount++;
+					}
+					if(currDay.right!=null){
+						prevDay.right=newItem;
+						newItem.right=currDay;
+						prevMonth.down=newItem;
+						newItem.down=currMonth;
+					}else{
+						currDay.right=newItem;
+						prevMonth.down=newItem;
+						newItem.down=currMonth;
+					}
+				}else{
+					while(mCount!=monthIndex){	//update index and day pointers
+						if(currDay.right!=null){
+							prevDay=currDay;
+							currDay=currDay.right;
+						}
+						mCount++;
 					}
 
-					LoopBack(newItem,dNode,dayPrev,monthPrev);
+					while(dCount!=dayIndex){	//update dcount till matches the desired day index
+						if(currMonth.down!=null){
+							prevMonth=currMonth;
+							currMonth=currMonth.down;
+						}
+						dCount++;
+					}
+
+					if(currDay.right!=null && currMonth.down!=null){
+						prevMonth.down=newItem;
+						newItem.down=currMonth;
+						prevDay.right=newItem;
+						newItem.right=currDay;
+					}else if(currDay.right!=null && currMonth.down==null){
+						prevDay.right=newItem;
+						newItem.right=currDay;
+						currMonth.down=newItem;
+					}else if(currDay.right==null && currMonth.down!=null){
+						prevMonth.down=newItem;
+						newItem.down=currMonth;
+						currDay.right=newItem;
+					}
 				}
+
 			}
+
 		}
 
 	}
@@ -166,6 +292,7 @@ public class Calendar
 	{
 		/*All items for the given month should be deleted.
 		If the month has no Items, simply do nothing.*/
+
 	}
 	
 	public void clearDay(int day)
