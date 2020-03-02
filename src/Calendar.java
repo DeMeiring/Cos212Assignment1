@@ -506,25 +506,6 @@ public class Calendar
 				month.down=null;
 			}
 		}
-		/*while(true){
-			if(currDay.right!=null){
-				currDay.right=null;
-			}
-			if(currMonth.down!=null){
-				currMonth.down=null;
-			}
-			if(dCount<=30){
-				dCount++;
-			}
-			if(mCount<=11){
-				mCount++;
-			}
-			if(dCount==30&&mCount==11){
-				break;
-			}
-			currDay=dayArr[dCount];
-			currMonth=monthArr[mCount];
-		}*/
 	}
 	
 	
@@ -564,20 +545,40 @@ public class Calendar
 	{
 		/*Return the head Item for the month passed as a parameter.
 		If no such Item exists, return null*/
-		
-		return null;
+		int[] arr = findIndexesArray(0,month);
+		int monthIndex = arr[0];
+		if(monthArr[monthIndex].down==null){
+			return null;
+		}else{
+			Item head = monthArr[monthIndex].down;
+			Item retItem = new Item();
+			retItem.setDescription(head.getDescription());
+			retItem.setDuration(head.getDuration());
+			retItem.setPriority(head.getPriority());
+			retItem.right=head.right;
+			retItem.down=head.down;
+			return retItem;
+		}
 	}
 	
-	public Item getDayItem(int day)
-	{
+	public Item getDayItem(int day) {
 		/*Return the head Item for the day passed as a parameter.
 		If no such Item exists, return null*/
-		Item dNode;
-		dNode = getDayHead(day);
-		if(dNode.right==null){
+		int[] arr = findIndexesArray(day, "Jan");
+		int dayIndex = arr[1];
+
+		if (dayArr[dayIndex].right == null) {
 			return null;
-		}else
-		return dNode.right;
+		} else {
+			Item head = dayArr[dayIndex].right;
+			Item retItem = new Item();
+			retItem.setDescription(head.getDescription());
+			retItem.setDuration(head.getDuration());
+			retItem.setPriority(head.getPriority());
+			retItem.right = head.right;
+			retItem.down = head.down;
+			return retItem;
+		}
 	}
 	//============================================helper functions =====================================================
 	public void createDay(){
