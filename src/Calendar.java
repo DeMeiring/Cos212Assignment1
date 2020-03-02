@@ -394,7 +394,37 @@ public class Calendar
 	
 	public void deleteItems(int day, String month)
 	{
-		/*Delete all items at the given day and month combination.*/				
+		/*Delete all items at the given day and month combination.*/
+		int[] arr = findIndexesArray(day,month);
+		int dayIndex=arr[1],monthIndex=arr[0];
+		if(!isOccupied(day,month)){	//no item at given day month combo
+			return;
+		}else{
+			Item dNode,mNode,prevDay=dayArr[dayIndex],prevMonth=monthArr[monthIndex],currItem;
+			dNode=dayArr[dayIndex];
+			mNode=monthArr[monthIndex];
+			while (dNode!=mNode){
+				if(dNode.right!=null){
+					dNode=dNode.right;
+				}
+				if(mNode.down!=null){
+					mNode=mNode.down;
+				}
+			}
+			currItem=dNode;
+			while(prevDay.right!=currItem){
+				if(prevDay.right!=null){
+					prevDay=prevDay.right;
+				}
+			}
+			while(prevMonth.down!=currItem){
+				if(prevMonth.down!=null){
+					prevMonth=prevMonth.down;
+				}
+			}
+			prevDay.right=currItem.right;
+			prevMonth.down=currItem.down;
+		}
 	}
 	
 	/*Clearing Methods*/
