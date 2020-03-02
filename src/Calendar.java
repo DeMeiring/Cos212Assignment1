@@ -432,7 +432,56 @@ public class Calendar
 	{
 		/*All items for the given month should be deleted.
 		If the month has no Items, simply do nothing.*/
-
+		int[] arr = findIndexesArray(1,month);
+		int monthIndex=arr[0];
+		if(monthArr[monthIndex].down==null){	//no items in that month
+			return;
+		}else {
+			Item currMonth = monthArr[monthIndex].down;
+			Item currDay, prevDay;
+			if (currMonth.down.down == null) {    //just one item for that month
+				for (Item day : dayArr) {
+					if (day.right != null) {
+						currDay = day.right;
+						prevDay = day;
+						while (true) {
+							if (currDay == currMonth) {
+								prevDay.right = currDay.right;
+								break;
+							} else if (currDay.right != null) {
+								prevDay = currDay;
+								currDay = currDay.right;
+							} else {
+								break;
+							}
+						}
+					}
+				}
+				monthArr[monthIndex].down = null;
+			} else {	//more than one item in that month
+				while (currMonth.down != null) {
+					for (Item day : dayArr) {
+						if (day.right != null) {
+							currDay = day.right;
+							prevDay = day;
+							while (true) {
+								if (currDay == currMonth) {
+									prevDay.right = currDay.right;
+									break;
+								}else if(currDay.right!=null){
+									prevDay=currDay;
+									currDay=currDay.right;
+								}else{
+									break;
+								}
+							}
+						}
+					}
+					currMonth = currMonth.down;
+				}
+				monthArr[monthIndex].down = null;
+			}
+		}
 	}
 	
 	public void clearDay(int day)
@@ -444,6 +493,38 @@ public class Calendar
 	public void clearYear()
 	{
 		/*Delete all Items from the calendar.*/
+
+		int dCount=0,mCount=0;
+		Item currDay=dayArr[dCount],currMonth=monthArr[mCount];
+		for (Item day:dayArr) {
+			if(day.right!=null){
+				day.right=null;
+			}
+		}
+		for (Item month:monthArr) {
+			if(month.down!=null){
+				month.down=null;
+			}
+		}
+		/*while(true){
+			if(currDay.right!=null){
+				currDay.right=null;
+			}
+			if(currMonth.down!=null){
+				currMonth.down=null;
+			}
+			if(dCount<=30){
+				dCount++;
+			}
+			if(mCount<=11){
+				mCount++;
+			}
+			if(dCount==30&&mCount==11){
+				break;
+			}
+			currDay=dayArr[dCount];
+			currMonth=monthArr[mCount];
+		}*/
 	}
 	
 	

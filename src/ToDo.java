@@ -36,7 +36,8 @@ public class ToDo
 		clnd.addItem(2,"Jan","2nd Jan priority 6","06:00",6);
 		clnd.addItem(2,"Jan","2nd Jan priority 2","06:00",2);
 
-		clnd.deleteItems(2,"Jan");
+		clnd.clearMonth("Feb");
+		//clnd.clearYear();
 
 
 
