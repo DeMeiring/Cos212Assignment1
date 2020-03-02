@@ -17,12 +17,25 @@ public class ToDo
 
 		clnd.addItem(3,"Mar","3rd Mar","06:00",9);
 		clnd.addItem(3,"Feb","3rd Feb","06:00",9);*/
-		clnd.addItem(9,"Jan","9th Jan","06:00",0);
+		/*clnd.addItem(9,"Jan","9th Jan","06:00",0);
 		clnd.addItem(9,"Feb","9th Feb","06:00",0);
 		clnd.addItem(9,"Mar","9th Mar","06:00",0);
 		clnd.addItem(4,"Mar","4th Mar","06:00",0);
 		clnd.addItem(2,"Mar","2nd Mar","06:00",0);
-		clnd.addItem(23,"Mar","23rd Mar","06:00",0);
+		clnd.addItem(23,"Mar","23rd Mar","06:00",0);*/
+
+		clnd.addItem(2,"Jan","2nd Jan","06:00",0);
+		clnd.addItem(2,"Mar","2nd Mar","06:00",0);
+		clnd.addItem(3,"Feb","3rd Feb","06:00",0);
+		clnd.addItem(2,"Feb","2nd Feb","06:00",0);
+		clnd.addItem(2,"Dec","2nd Dec","06:00",0);
+		clnd.addItem(2,"Jan","2nd Jan first priority","06:00",1);
+		clnd.addItem(2,"Jan","2nd Jan last priority","06:00",0);
+		clnd.addItem(2,"Jan","2nd Jan priority 6","06:00",6);
+
+
+
+
 		System.out.println("end");
 	}
 }
