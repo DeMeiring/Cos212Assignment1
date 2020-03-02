@@ -32,6 +32,11 @@ public class ToDo
 		clnd.addItem(2,"Jan","2nd Jan first priority","06:00",1);
 		clnd.addItem(2,"Jan","2nd Jan last priority","06:00",0);
 		clnd.addItem(2,"Jan","2nd Jan priority 6","06:00",6);
+		clnd.addItem(31,"Jan","31st Jan priority 6","06:00",6);
+		clnd.addItem(2,"Jan","2nd Jan priority 6","06:00",6);
+		clnd.addItem(2,"Jan","2nd Jan priority 2","06:00",2);
+
+		clnd.deletePriorityItem(2,"Jan",1);
 
 
 
