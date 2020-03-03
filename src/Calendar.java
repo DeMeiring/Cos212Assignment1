@@ -53,37 +53,41 @@ public class Calendar
 				monthDown(newItem,dayIndex,monthIndex,day);
 			}else{	//find prev day and prev month ,currday ,currMonth and use loop back
 				Item dNode,mNode,prevDay,prevMonth,currItem=null;
-				dNode=dayArr[dayIndex].right;
+				dNode=dayArr[dayIndex];
 				mNode = monthArr[monthIndex].down;
 				prevDay =dayArr[dayIndex];
 				prevMonth=monthArr[monthIndex];
-				while(true){
-					if(dNode==mNode){
-						currItem=dNode;
-						break;
+				while (mNode!=null){
+					dNode=dayArr[dayIndex];
+					while (dNode!=null){
+						if(dNode==mNode){
+							currItem=dNode;
+							break;
+						}else{
+							dNode=dNode.right;
+						}
 					}
-					if(dNode.right!=null){
-						dNode=dNode.right;
-					}
-					if(mNode.down!=null){
-						mNode=mNode.down;
-					}
+					mNode=mNode.down;
 				}
-				while(prevDay.right!=currItem){
-					if(prevDay.right!=null){
+				while(prevDay!=null){
+					if(prevDay.right==currItem){
+						break;
+					}else{
 						prevDay=prevDay.right;
-					}else{
-						break;
 					}
 				}
-				while(prevMonth.down!=currItem){
-					if(prevMonth.down!=null){
+				while(prevMonth!=null){
+					if(prevMonth.down==currItem){
+						break;
+					}else{
 						prevMonth=prevMonth.down;
-					}else{
-						break;
 					}
 				}
-				LoopBack(newItem,currItem,prevDay,prevMonth);
+				if(prevMonth==null || prevDay==null){
+					return;
+				}else{
+					LoopBack(newItem,currItem,prevDay,prevMonth);
+				}
 			}
 		}
 	}
@@ -192,31 +196,43 @@ public class Calendar
 		int dayIndex=arr[1],monthIndex=arr[0];
 		if(!isOccupied(day,month)){	//no item at given day month combo
 			return;
-		}else{
-			Item dNode,mNode,prevDay=dayArr[dayIndex],prevMonth=monthArr[monthIndex],currItem;
-			dNode=dayArr[dayIndex];
-			mNode=monthArr[monthIndex];
-			while (dNode!=mNode){
-				if(dNode.right!=null){
-					dNode=dNode.right;
+		}else {
+			Item dNode, mNode, prevDay = dayArr[dayIndex], prevMonth = monthArr[monthIndex], currItem = null;
+			dNode = dayArr[dayIndex];
+			mNode = monthArr[monthIndex];
+			while (mNode != null) {
+				dNode = dayArr[dayIndex];
+				while (dNode != null) {
+					if (dNode == mNode) {
+						currItem = dNode;
+						break;
+					} else {
+						dNode = dNode.right;
+					}
 				}
-				if(mNode.down!=null){
-					mNode=mNode.down;
+				mNode = mNode.down;
+			}
+
+			while (prevDay != null) {
+				if (prevDay.right == currItem) {
+					break;
+				} else {
+					prevDay = prevDay.right;
 				}
 			}
-			currItem=dNode;
-			while(prevDay.right!=currItem){
-				if(prevDay.right!=null){
-					prevDay=prevDay.right;
+			while (prevMonth != null) {
+				if (prevMonth.down == currItem) {
+					break;
+				} else {
+					prevMonth = prevMonth.down;
 				}
 			}
-			while(prevMonth.down!=currItem){
-				if(prevMonth.down!=null){
-					prevMonth=prevMonth.down;
-				}
+			if (prevMonth == null || prevDay == null) {
+				return;
+			} else {
+				prevDay.right = currItem.right;
+				prevMonth.down = currItem.down;
 			}
-			prevDay.right=currItem.right;
-			prevMonth.down=currItem.down;
 		}
 	}
 	
@@ -625,23 +641,24 @@ public class Calendar
 	}
 
 	public boolean isOccupied(int day, String month){	//function to see if slot is occupied
+		int[] arr=findIndexesArray(day,month);
+		int dayIndex=arr[1];
+		int monthIndex = arr[0];
 		Item dNode,mNode;
-		dNode=getDayHead(day);
-		mNode=getMonthHead(month);
-		while (true){
-			if(dNode==mNode){
-				return true;
+		dNode=dayArr[dayIndex];
+		mNode=monthArr[monthIndex];
+		while (mNode!=null){
+			dNode=dayArr[dayIndex];
+			while (dNode!=null){
+				if(dNode==mNode){
+					return true;
+				}else{
+					dNode=dNode.right;
+				}
 			}
-			if(dNode.right!=null){
-				dNode=dNode.right;
-			}
-			if(mNode.down!=null){
-				mNode=mNode.down;
-			}
-			if(dNode.right==null && mNode.down==null && dNode!=mNode){
-				return false;
-			}
+			mNode=mNode.down;
 		}
+		return false;
 	}
 
 	public void dayRight(Item newItem,int dayIndex,int monthIndex,String month){

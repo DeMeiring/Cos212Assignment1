@@ -77,7 +77,7 @@ public class ToDo
 		clnd.addItem(12,"Sep","12 Sep","06:00",0);
 		clnd.addItem(2,"Jan","2 Jan","06:00",0);
 		clnd.addItem(12,"Mar","12 Mar","06:00",0);
-		clnd.addItem(9,"Jan","9 Jan","06:00",0);
+		clnd.addItem(12,"Jan","9 Jan","06:00",0);
 		clnd.addItem(9,"Jan","9 Jan","06:00",0);
 		clnd.addItem(12,"Dec","12 Dec","06:00",0);
 		clnd.addItem(12,"Dec","12 Dec","06:00",3);
@@ -87,8 +87,9 @@ public class ToDo
 		clnd.addItem(31,"Dec","31st Dec","06:00",2);
 
 	//	clnd.clearMonth("Dec");
-		clnd.clearDay(12);
-
+	//	clnd.clearDay(12);
+		System.out.println(clnd.isOccupied(31,"Jan"));
+		//clnd.deleteItems(12,"jan");
 
 		System.out.println("end");
 	}
