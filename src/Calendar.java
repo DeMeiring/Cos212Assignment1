@@ -227,6 +227,26 @@ public class Calendar
 		If the month has no Items, simply do nothing.*/
 		int[] arr = findIndexesArray(1,month);
 		int monthIndex=arr[0];
+		if(monthIndex==0) {
+			if (monthArr[0].down==null) {
+				return;
+			} else {
+				Item currMonth = monthArr[0].down;
+				Item currDay;
+				while (currMonth != null) {
+					for (Item dayPtr : dayArr) {
+						if (dayPtr.right != null) {
+							currDay=dayPtr.right;
+							if (currDay == currMonth) {
+								dayPtr.right = currDay.right;
+							}
+						}
+					}
+					currMonth = currMonth.down;
+				}
+				monthArr[0].down = null;
+			}
+		}
 		if(monthArr[monthIndex].down==null){	//no items in that month
 			return;
 		}else {
@@ -252,7 +272,7 @@ public class Calendar
 				}
 				monthArr[monthIndex].down = null;
 			} else {	//more than one item in that month
-				while (currMonth.down != null) {
+				while (currMonth != null) {
 					for (Item day : dayArr) {
 						if (day.right != null) {
 							currDay = day.right;
@@ -307,7 +327,7 @@ public class Calendar
 				}
 				dayArr[dayIndex].right=null;
 			}else{
-				while (currDay.right!=null){
+				while (currDay!=null){
 					for (Item month:monthArr) {
 						if(month.down!=null){
 							currMonth=month.down;

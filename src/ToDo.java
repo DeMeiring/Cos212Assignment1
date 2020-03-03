@@ -82,8 +82,11 @@ public class ToDo
 		clnd.addItem(12,"Dec","12 Dec","06:00",0);
 		clnd.addItem(12,"Dec","12 Dec","06:00",3);
 		clnd.addItem(12,"Dec","12 Dec","06:00",2);
+		clnd.addItem(2,"Dec","2nd Dec","06:00",2);
+		clnd.addItem(24,"Dec","24th Dec","06:00",2);
+		clnd.addItem(31,"Dec","31st Dec","06:00",2);
 
-		clnd.clearMonth("Dec");
+	//	clnd.clearMonth("Dec");
 		clnd.clearDay(12);
 
 
