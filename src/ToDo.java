@@ -91,12 +91,14 @@ public class ToDo
 		clnd.addItem(2,"Dec","2nd Dec","06:00",2);
 		clnd.addItem(24,"Dec","24th Dec","06:00",2);
 		clnd.addItem(31,"Dec","31st Dec","06:00",2);
+		clnd.addItem(12,"Dec","12 Dec unique desc","06:00",0);
 
 	//	clnd.clearMonth("Dec");
 	//	clnd.clearDay(12);
 		System.out.println(clnd.isOccupied(31,"Jan"));
 		//clnd.deleteItems(12,"jan");
-		clnd.deletePriorityItem(12,"dec",0);
+		//clnd.deletePriorityItem(12,"dec",0);
+		clnd.deleteItem(12,"Dec","12 Dec unique desc");
 
 		System.out.println("end");
 	}

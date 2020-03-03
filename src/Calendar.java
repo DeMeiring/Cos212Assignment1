@@ -97,8 +97,111 @@ public class Calendar
 	{
 		/*Delete the first Item at the given day and month combination with the given description and return the deleted Item.
 		If no such Item exists, return null.*/
-				
-		return null;
+		int[]arr = findIndexesArray(day,month);
+		int dayIndex=arr[1];
+		int monthIndex=arr[0];
+		Item dNode=dayArr[dayIndex],mNode=monthArr[monthIndex],currItem=null,prevDay=dayArr[dayIndex],prevMonth=monthArr[monthIndex],retItem=null,prevBack=null;
+		if(dNode.right==null || mNode.down==null){
+			return null;
+		}else{
+			if(!isOccupied(day,month)){
+				return null;
+			}else{
+				while (mNode!=null){	//get item matches on that day
+					dNode=dayArr[dayIndex];
+					while (dNode!=null){
+						if(dNode==mNode){
+							currItem=dNode;
+							break;
+						}else{
+							dNode=dNode.right;
+						}
+					}
+					mNode=mNode.down;
+				}
+				while(prevDay!=null){
+					if(prevDay.right==currItem){
+						break;
+					}else{
+						prevDay=prevDay.right;
+					}
+				}
+
+				while(prevMonth!=null){
+					if(prevMonth.down==currItem){
+						break;
+					}else{
+						prevMonth=prevMonth.down;
+					}
+				}
+
+			}
+			if(currItem.back==null && currItem.getDescription()!=description){
+				return null;
+			}else if(currItem.back==null && currItem.getDescription()==description) {
+				retItem = new Item();
+				retItem.right = currItem.right;
+				retItem.down = currItem.down;
+				retItem.setDescription(currItem.getDescription());
+				retItem.setPriority(currItem.getPriority());
+				retItem.setDuration(currItem.getDuration());
+				if (prevDay==null || prevMonth==null) {
+					return null;
+				}else{
+					prevDay.right = currItem.right;
+					prevMonth.down = currItem.down;
+					return retItem;
+				}
+			}else if(currItem.back!=null && currItem.getDescription()!=description){//next back item is the desired item
+				prevBack=currItem;
+				currItem=currItem.back;
+				if(currItem.getDescription()==description){
+					retItem = new Item();
+					retItem.right = currItem.right;
+					retItem.down = currItem.down;
+					retItem.setDescription(currItem.getDescription());
+					retItem.setPriority(currItem.getPriority());
+					retItem.setDuration(currItem.getDuration());
+					if(prevDay==null || prevMonth==null){
+						return null;
+					}
+				}else{
+					while(currItem!=null){
+						if(currItem.getDescription()==description){
+							break;
+						}else{
+							prevBack=currItem;
+							currItem=currItem.back;
+						}
+					}
+					if(currItem==null){	//did not find item with desired description
+						return null;
+					}else{
+						retItem = new Item();
+						retItem.right = currItem.right;
+						retItem.down = currItem.down;
+						retItem.setDescription(currItem.getDescription());
+						retItem.setPriority(currItem.getPriority());
+						retItem.setDuration(currItem.getDuration());
+						prevBack.back=currItem.back;
+						return retItem;
+					}
+				}
+			}else if(currItem.back!=null && currItem.getDescription()==description){//back is not null but currItem is the desired item
+				prevDay.right=currItem.back;
+				prevMonth.down=currItem.back;
+				retItem = new Item();
+				retItem.right = currItem.right;
+				retItem.down = currItem.down;
+				retItem.setDescription(currItem.getDescription());
+				retItem.setPriority(currItem.getPriority());
+				retItem.setDuration(currItem.getDuration());
+				currItem.right=null;
+				currItem.down=null;
+				return retItem;
+			}
+			return null;	//if not reached a return by this point then item with desired description not found
+		}
 	}
 	
 	public void deletePriorityItem(int day, String month, int priority)
