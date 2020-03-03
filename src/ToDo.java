@@ -93,7 +93,14 @@ public class ToDo
 		clnd.addItem(31,"Dec","31st Dec","06:00",2);
 		clnd.addItem(12,"Dec","12 Dec unique desc","06:00",5);
 
-		System.out.println(clnd.getItem(12,"Dec").getDescription());
+		Item testItem = clnd.getItem(12,"Dec");
+		System.out.println(testItem.getDescription());
+		Item tmp;
+		tmp=clnd.getDayHead(12);
+		System.out.println(tmp.right.getDescription());
+
+		tmp=clnd.getMonthHead("Jul");
+		System.out.println(tmp.down.getDescription());
 
 	//	clnd.clearMonth("Dec");
 	//	clnd.clearDay(12);

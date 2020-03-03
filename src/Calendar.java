@@ -536,9 +536,9 @@ public class Calendar
 					retItem.setPriority(currItem.getPriority());
 					retItem.setDuration(currItem.getDuration());
 					retItem.setDescription(currItem.getDescription());
-					retItem.back = dNode.back;
-					retItem.right = dNode.right;
-					retItem.down = dNode.down;
+					retItem.back = currItem.back;
+					retItem.right = currItem.right;
+					retItem.down = currItem.down;
 					return retItem;
 				}
 			}
@@ -685,25 +685,6 @@ public class Calendar
 				break;
 		}
 		return monthArr[index];
-	}
-
-	public void printMonth(Item node){
-		if(node.down==null){
-			System.out.println(node.getDescription());
-			return;
-		}else
-			System.out.println(node.getDescription());
-			printMonth(node.down);
-	}
-
-	public void printDay(Item node){
-		if(node.right==null){
-			System.out.println(node.getDescription());
-			return;
-		}else{
-			System.out.println(node.getDescription());
-			printDay(node.right);
-		}
 	}
 
 
