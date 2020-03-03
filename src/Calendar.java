@@ -113,77 +113,87 @@ public class Calendar
 		mNode=monthArr[monthIndex];
 		if(!isOccupied(day,month)){	//is no item in the day month combo
 			return;
-		}else{
-			Item prevMonth,prevDay,currItem;
-			prevMonth=monthArr[monthIndex];
-			prevDay=dayArr[dayIndex];
+		}else {
+			Item prevMonth, prevDay, currItem = null;
+			prevMonth = monthArr[monthIndex];
+			prevDay = dayArr[dayIndex];
 
-			while(dNode!=mNode){
-				if(dNode.right!=null){
-					dNode=dNode.right;
-				}
-				if(mNode.down!=null){
-					mNode=mNode.down;
-				}
-			}
-			currItem=dNode;
-			while(prevDay.right!=currItem){
-				if(dNode.right!=null){
-					dNode=dNode.right;
-				}
-			}
-			while(prevMonth.down!=currItem){
-				if(mNode.down!=null){
-					mNode=mNode.down;
-				}
-			}
-
-			if(currItem.back==null && currItem.getPriority()==priority){
-				prevDay.right=currItem.right;
-				prevMonth.down=currItem.down;
-			}else if(currItem.back==null && currItem.getPriority()!=priority){
-				return;
-			}else {
-				if (currItem.back!=null && currItem.getPriority()==priority) {
-					Item prevItem = currItem;
-					while(currItem.back!=null){
-						if(currItem.back.getPriority()==priority){
-							currItem=currItem.back;
-						}else{
-							break;
-						}
+			while (mNode != null) {
+				dNode = dayArr[dayIndex];
+				while (dNode != null) {
+					if (dNode == mNode) {
+						currItem = dNode;
+						break;
+					} else {
+						dNode = dNode.right;
 					}
-					if(currItem.back!=null){
-						currItem.back.down=prevItem.down;
-						currItem.back.right=prevItem.right;
-						prevDay.right=currItem.back;
-						prevMonth.down=currItem.back;
-					}else{
-						prevDay.right=prevItem.right;
-						prevMonth.down=prevItem.down;
-					}
-
+				}
+				mNode = mNode.down;
+			}
+			while (prevDay != null) {
+				if (prevDay.right == currItem) {
+					break;
 				} else {
-					prevPrior = currPrior = currItem;
-					while (true) {
-						if (currItem.back == null && currItem.getPriority() != priority) {
-							return;
-						} else if (currPrior.back != null && currPrior.getPriority() != priority) {
-							prevPrior = currPrior;
-							currPrior = currPrior.back;
+					prevDay = prevDay.right;
+				}
+			}
+			while (prevMonth != null) {
+				if (prevMonth.down == currItem) {
+					break;
+				} else {
+					prevMonth = prevMonth.down;
+				}
+			}
+			if (currItem == null) {
+				return;
+			} else {
+				if (currItem.back == null && currItem.getPriority() == priority) {
+					prevDay.right = currItem.right;
+					prevMonth.down = currItem.down;
+				} else if (currItem.back == null && currItem.getPriority() != priority) {
+					return;
+				} else {
+					if (currItem.back != null && currItem.getPriority() == priority) {
+						Item prevItem = currItem;
+						while (currItem.back != null) {
+							if (currItem.back.getPriority() == priority) {
+								currItem = currItem.back;
+							} else {
+								break;
+							}
+						}
+						if (currItem.back != null) {
+							currItem.back.down = prevItem.down;
+							currItem.back.right = prevItem.right;
+							prevDay.right = currItem.back;
+							prevMonth.down = currItem.back;
 						} else {
-							break;
+							prevDay.right = prevItem.right;
+							prevMonth.down = prevItem.down;
 						}
-					}
 
-					while (currPrior.back != null) {
-						if(currPrior.back.getPriority()==priority){
-							currPrior = currPrior.back;
-						}else{
-							break;
+					} else {
+						prevPrior = currPrior = currItem;
+						while (true) {
+							if (currItem.back == null && currItem.getPriority() != priority) {
+								return;
+							} else if (currPrior.back != null && currPrior.getPriority() != priority) {
+								prevPrior = currPrior;
+								currPrior = currPrior.back;
+							} else {
+								break;
+							}
 						}
+
+						while (currPrior.back != null) {
+							if (currPrior.back.getPriority() == priority) {
+								currPrior = currPrior.back;
+							} else {
+								break;
+							}
+						}
+						prevPrior.back = currPrior.back;
 					}
-					prevPrior.back = currPrior.back;
 				}
 			}
 		}
