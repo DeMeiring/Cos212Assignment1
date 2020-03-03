@@ -507,29 +507,41 @@ public class Calendar
 		/*Return the head Item of the day and month. If no such Item exists, return null*/
 		if(!isOccupied(day,month)){	//no item at that intersection
 			return null;
-		}else{	//does contain intersection
-			Item dNode,mNode;
-			mNode = getMonthHead(month);
-			dNode = getDayHead(day);
-			while(dNode!=mNode){	//loop through corresponding month and day list
-				if(dNode.right !=null){
-					dNode=dNode.right;
-				}else if(mNode.down!=null){
+		}else {    //does contain intersection
+			int[] arr = findIndexesArray(day, month);
+			int dayIndex = arr[1], monthIndex = arr[0];
+			Item dNode, mNode,currItem=null;
+			mNode = monthArr[monthIndex];
+			dNode = dayArr[dayIndex];
+			if (dNode.right == null || mNode.down == null) {
+				return null;
+			} else {
+				dNode = getDayHead(day);
+				while (mNode != null) {    //loop through corresponding month and day list
+					dNode=dayArr[dayIndex];
+					while (dNode!=null){
+						if(dNode==mNode){
+							currItem=dNode;
+							break;
+						}else{
+							dNode=dNode.right;
+						}
+					}
 					mNode=mNode.down;
+				}
+				if (currItem==null) {
+					return null;
 				}else{
-					break;
+					Item retItem = new Item();
+					retItem.setPriority(currItem.getPriority());
+					retItem.setDuration(currItem.getDuration());
+					retItem.setDescription(currItem.getDescription());
+					retItem.back = dNode.back;
+					retItem.right = dNode.right;
+					retItem.down = dNode.down;
+					return retItem;
 				}
 			}
-			if(dNode==mNode) {
-				Item retItem = new Item();
-				retItem.setPriority(dNode.getPriority());
-				retItem.setDuration(dNode.getDuration());
-				retItem.setDescription(dNode.getDescription());
-				retItem.back = dNode.back;
-				retItem.right = dNode.right;
-				retItem.down = dNode.down;
-				return retItem;
-			}else return null;
 		}
 	}
 	
