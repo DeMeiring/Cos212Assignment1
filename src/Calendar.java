@@ -232,7 +232,7 @@ public class Calendar
 		}else {
 			Item currMonth = monthArr[monthIndex].down;
 			Item currDay, prevDay;
-			if (currMonth.down.down == null) {    //just one item for that month
+			if (currMonth.down == null) {    //just one item for that month
 				for (Item day : dayArr) {
 					if (day.right != null) {
 						currDay = day.right;
@@ -281,6 +281,56 @@ public class Calendar
 	{
 		/*All items for the given day should be deleted.
 		If the day has no Items, simply do nothing.*/
+		int dayIndex = findIndexesArray(day,"Jan")[1];
+		if(dayArr[dayIndex].right==null){
+			return;
+		}else{
+			Item currDay = dayArr[dayIndex].right;
+			Item currMonth,prevMonth;
+			if(currDay.right==null){
+				for (Item month:monthArr) {
+					if(month.down!=null){
+						currMonth=month.down;
+						prevMonth=month;
+						while (true){
+							if(currMonth==currDay){
+								prevMonth.down=currMonth.down;
+								break;
+							}else if(currMonth.down!=null){
+								prevMonth=currMonth;
+								currMonth=currMonth.down;
+							}else{
+								break;
+							}
+						}
+					}
+				}
+				dayArr[dayIndex].right=null;
+			}else{
+				while (currDay.right!=null){
+					for (Item month:monthArr) {
+						if(month.down!=null){
+							currMonth=month.down;
+							prevMonth=month;
+							while (true){
+								if(currMonth==currDay){
+									prevMonth.down=currMonth.down;
+									break;
+								}else if(currMonth.down!=null){
+									prevMonth=currMonth;
+									currMonth=currMonth.down;
+								}else{
+									break;
+								}
+							}
+						}
+					}
+					currDay=currDay.right;
+				}
+				dayArr[dayIndex].right=null;
+			}
+		}
+
 	}
 	
 	public void clearYear()

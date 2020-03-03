@@ -83,6 +83,8 @@ public class ToDo
 		clnd.addItem(12,"Dec","12 Dec","06:00",3);
 		clnd.addItem(12,"Dec","12 Dec","06:00",2);
 
+		clnd.clearMonth("Dec");
+		clnd.clearDay(12);
 
 
 		System.out.println("end");
