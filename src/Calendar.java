@@ -35,142 +35,57 @@ public class Calendar
 		newItem.setDescription(description);
 		newItem.setDuration(duration);
 		newItem.setPriority(priority);
-		//==================================End of create new Item==============================================================
-		if (monthArr[monthIndex].down == null && dayArr[dayIndex].right == null) {    //there does not exist an item at that day of the month
+		if(isOccupied(day,month)){
+			Item dNode=dayArr[dayIndex],mNode=monthArr[monthIndex],prevDay=dayArr[dayIndex],prevMonth=monthArr[monthIndex],currItem=null;
+			while(mNode!=null){
+				dNode=dayArr[dayIndex];
+				while (dNode!=null){
+					if(dNode==mNode){
+						currItem=dNode;
+						break;
+					}else{
+						dNode=dNode.right;
+					}
+				}
+				mNode=mNode.down;
+			}
+			dNode=dayArr[dayIndex].right;
+			mNode=monthArr[monthIndex].down;
+			while (mNode!=null){
+				if(mNode==currItem){
+					break;
+				}else{
+					prevMonth=mNode;
+					mNode=mNode.down;
+				}
+			}
+			while (dNode!=null){
+				if(dNode==currItem){
+					break;
+				}else{
+					prevDay=dNode;
+					dNode=dNode.right;
+				}
+			}
+			if(dNode==null||mNode==null){
+				return;
+			}else{
+				LoopBack(newItem,currItem,prevDay,prevMonth);
+			}
+		}else if (monthArr[monthIndex].down == null && dayArr[dayIndex].right == null) {    //there does not exist an item at that day of the month
 			monthArr[monthIndex].down = newItem;
 			dayArr[dayIndex].right = newItem;
 		} else if (monthArr[monthIndex].down != null && dayArr[dayIndex].right == null) {    //case where there is no item on that day but there are items in that month
-		    if(isOccupied(day,month)){
-                Item mNode=monthArr[monthIndex],dNode=dayArr[dayIndex],currItem=null,prevMonth=monthArr[monthIndex],prevDay=dayArr[dayIndex];
-                while (mNode!=null){
-                    dNode=dayArr[dayIndex];
-                    while (dNode!=null){
-                        if(dNode==mNode){
-                            currItem=dNode;
-                            break;
-                        }else{
-                            dNode=dNode.right;
-                        }
-                    }
-                    mNode=mNode.down;
-                }
-                mNode=monthArr[monthIndex].down;
-                dNode=dayArr[dayIndex].right;
-                while(mNode!=null){
-                    if(mNode==currItem){
-                        break;
-                    }else{
-                        prevMonth=mNode;
-                        mNode=mNode.down;
-                    }
-                }
-                while(dNode!=null){
-                    if(dNode==currItem){
-                        break;
-                    }else{
-                        prevDay=dNode;
-                        dNode=dNode.right;
-                    }
-                }
-                if(dNode==null || mNode==null){
-                    return;
-                }else {
-                    LoopBack(newItem, currItem, prevDay, prevMonth);
-                }
-            }else {
                 dayArr[dayIndex].right = newItem;
                 dayRight(newItem, dayIndex, monthIndex, month);
-            }
-
 		} else if (monthArr[monthIndex].down == null && dayArr[dayIndex].right != null) {    //if month has no events but day has other events
-		    if(isOccupied(day,month)){
-                Item dNode=dayArr[dayIndex],mNode=monthArr[monthIndex],prevDay=dayArr[dayIndex],prevMonth=monthArr[monthIndex],currItem=null;
-                while(mNode!=null){
-                    dNode=dayArr[dayIndex];
-                    while (dNode!=null){
-                        if(dNode==mNode){
-                            currItem=dNode;
-                            break;
-                        }else{
-                            dNode=dNode.right;
-                        }
-                    }
-                    mNode=mNode.down;
-                }
-                dNode=dayArr[dayIndex].right;
-                mNode=monthArr[monthIndex].down;
-                while (mNode!=null){
-                    if(mNode==currItem){
-                        break;
-                    }else{
-                        prevMonth=mNode;
-                        mNode=mNode.down;
-                    }
-                }
-                while (dNode!=null){
-                    if(dNode==currItem){
-                        break;
-                    }else{
-                        prevDay=dNode;
-                        dNode=dNode.right;
-                    }
-                }
-                if(dNode==null||mNode==null){
-                    return;
-                }else{
-                    LoopBack(newItem,currItem,prevDay,prevMonth);
-                }
-
-
-            }else {
                 monthArr[monthIndex].down = newItem;
                 monthDown(newItem, dayIndex, monthIndex, day);
-            }
-
 		} else {    //if both month and day are not empty
-			if (!isOccupied(day, month)) {    //no item is already in the slot
 				dayRight(newItem,dayIndex,monthIndex,month);
 				monthDown(newItem,dayIndex,monthIndex,day);
-			}else{	//find prev day and prev month ,currday ,currMonth and use loop back
-				Item dNode,mNode,prevDay,prevMonth,currItem=null;
-				dNode=dayArr[dayIndex];
-				mNode = monthArr[monthIndex].down;
-				prevDay =dayArr[dayIndex];
-				prevMonth=monthArr[monthIndex];
-				while (mNode!=null){
-					dNode=dayArr[dayIndex];
-					while (dNode!=null){
-						if(dNode==mNode){
-							currItem=dNode;
-							break;
-						}else{
-							dNode=dNode.right;
-						}
-					}
-					mNode=mNode.down;
-				}
-				while(prevDay!=null){
-					if(prevDay.right==currItem){
-						break;
-					}else{
-						prevDay=prevDay.right;
-					}
-				}
-				while(prevMonth!=null){
-					if(prevMonth.down==currItem){
-						break;
-					}else{
-						prevMonth=prevMonth.down;
-					}
-				}
-				if(prevMonth==null || prevDay==null){
-					return;
-				}else{
-					LoopBack(newItem,currItem,prevDay,prevMonth);
-				}
 			}
 		}
-	}
 	/*Deletion*/
 	
 	public Item deleteItem(int day, String month, String description)
