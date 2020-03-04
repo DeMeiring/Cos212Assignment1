@@ -19,95 +19,14 @@ public class ToDo
 
 	public static void main(String[] args) {
 		Calendar clnd = new Calendar();
-		/*for(int i=0;i<6;i++){
-			int rd=randomDay();
-			System.out.println(rd+" ");
-			clnd.addItem(rd,"Jun",String.valueOf(rd)+" JUN","06:00",0);
-		}
-		System.out.println("============================================================================================");
+        String[] arr = {"Jan","Feb","Mar","Apr","may","jun","Jul","aug","Sep","Oct","nov","DEC"};
+        for(int i=0;i<12;i++){
+            clnd.addItem(1,arr[i],arr[i],"06:00",0);
+        }
 
-		for(int i=0;i<6;i++){
-			int rd=randomDay();
-			System.out.println(rd+" ");
-			clnd.addItem(rd,"Dec",String.valueOf(rd)+" Dec","06:00",0);
-		}
-
-		System.out.println("============================================================================================");
-		for(int i=0;i<6;i++){
-			int rd=randomDay();
-			System.out.println(rd+" ");
-			clnd.addItem(rd,"Jan",String.valueOf(rd)+" Jan","06:00",0);
-		}
-
-		System.out.println("============================================================================================");
-		for(int i=0;i<6;i++){
-			int rd=randomDay();
-			System.out.println(rd+" ");
-			clnd.addItem(rd,"Mar",String.valueOf(rd)+" Mar","06:00",0);
-		}
-
-		System.out.println("============================================================================================");
-		for(int i=0;i<6;i++){
-			int rd=randomDay();
-			System.out.println(rd+" ");
-			clnd.addItem(rd,"Oct",String.valueOf(rd)+" Oct","06:00",0);
-		}*/
-		//clnd.print();
-
-		/*clnd.addItem(2,"Jan","2nd Jan","06:00",0);
-		clnd.addItem(2,"Mar","2nd Mar","06:00",0);
-		clnd.addItem(3,"Jan","3rd Jan first priority","06:00",1);
-		clnd.addItem(2,"Jul","2nd Jul","06:00",0);
-		clnd.addItem(2,"Dec","2nd Dec","06:00",0);
-		clnd.addItem(21,"Jan","21st Jan","06:00",0);
-		clnd.addItem(4,"Jan","4th Jan","06:00",0);
-		clnd.addItem(4,"Feb","4th Feb","06:00",0);
-		clnd.addItem(4,"Jun","4th Jun","06:00",0);
-		clnd.addItem(4,"Nov","4th Nov","06:00",0);*/
-
-
-
-		//clnd.deletePriorityItem(2,"Jan",6);
-		//clnd.clearMonth("Jan");
-		//clnd.clearYear();
-
-		clnd.addItem(12,"Jul","12 Jul","06:00",0);
-		clnd.addItem(12,"Jul","12 Jul","06:00",1);
-		clnd.addItem(12,"Jan","12 Jan","06:00",0);
-		clnd.addItem(12,"Sep","12 Sep","06:00",0);
-		clnd.addItem(2,"Jan","2 Jan","06:00",0);
-		clnd.addItem(12,"Mar","12 Mar","06:00",0);
-		clnd.addItem(12,"Jan","12 Jan","06:00",0);
-		clnd.addItem(9,"Jan","9 Jan","06:00",0);
-		clnd.addItem(12,"Dec","12 Dec","06:00",0);
-		clnd.addItem(12,"Dec","12 Dec","06:00",0);
-		clnd.addItem(12,"Dec","12 Dec","06:00",0);
-		clnd.addItem(12,"Dec","12 Dec","06:00",3);
-		clnd.addItem(12,"Dec","12 Dec","06:00",3);
-		clnd.addItem(12,"Dec","12 Dec","06:00",3);
-		clnd.addItem(12,"Dec","12 Dec","06:00",2);
-		clnd.addItem(12,"Dec","12 Dec","06:00",2);
-		clnd.addItem(12,"Dec","12 Dec","06:00",2);
-		clnd.addItem(2,"Dec","2nd Dec","06:00",2);
-		clnd.addItem(24,"Dec","24th Dec","06:00",2);
-		clnd.addItem(31,"Dec","31st Dec","06:00",2);
-		clnd.addItem(12,"Dec","12 Dec unique desc","06:00",5);
-
-		Item testItem = clnd.getItem(12,"Dec");
-		System.out.println(testItem.getDescription());
-		Item tmp;
-		tmp=clnd.getDayHead(12);
-		System.out.println(tmp.right.getDescription());
-
-		tmp=clnd.getMonthHead("Jul");
-		System.out.println(tmp.down.getDescription());
-
-	//	clnd.clearMonth("Dec");
-	//	clnd.clearDay(12);
-		System.out.println(clnd.isOccupied(31,"Jan"));
-		//clnd.deleteItems(12,"jan");
-		//clnd.deletePriorityItem(12,"dec",0);
-		clnd.deleteItem(12,"Dec","12 Dec unique desc");
+        for(int i=1;i<32;i++){
+            clnd.addItem(i,"dec",i+" jan","06:00",0);
+        }
 
 		System.out.println("end");
 	}

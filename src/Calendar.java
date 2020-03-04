@@ -40,12 +40,92 @@ public class Calendar
 			monthArr[monthIndex].down = newItem;
 			dayArr[dayIndex].right = newItem;
 		} else if (monthArr[monthIndex].down != null && dayArr[dayIndex].right == null) {    //case where there is no item on that day but there are items in that month
-			dayArr[dayIndex].right = newItem;
-			dayRight(newItem,dayIndex,monthIndex,month);
+		    if(isOccupied(day,month)){
+                Item mNode=monthArr[monthIndex],dNode=dayArr[dayIndex],currItem=null,prevMonth=monthArr[monthIndex],prevDay=dayArr[dayIndex];
+                while (mNode!=null){
+                    dNode=dayArr[dayIndex];
+                    while (dNode!=null){
+                        if(dNode==mNode){
+                            currItem=dNode;
+                            break;
+                        }else{
+                            dNode=dNode.right;
+                        }
+                    }
+                    mNode=mNode.down;
+                }
+                mNode=monthArr[monthIndex].down;
+                dNode=dayArr[dayIndex].right;
+                while(mNode!=null){
+                    if(mNode==currItem){
+                        break;
+                    }else{
+                        prevMonth=mNode;
+                        mNode=mNode.down;
+                    }
+                }
+                while(dNode!=null){
+                    if(dNode==currItem){
+                        break;
+                    }else{
+                        prevDay=dNode;
+                        dNode=dNode.right;
+                    }
+                }
+                if(dNode==null || mNode==null){
+                    return;
+                }else {
+                    LoopBack(newItem, currItem, prevDay, prevMonth);
+                }
+            }else {
+                dayArr[dayIndex].right = newItem;
+                dayRight(newItem, dayIndex, monthIndex, month);
+            }
 
 		} else if (monthArr[monthIndex].down == null && dayArr[dayIndex].right != null) {    //if month has no events but day has other events
-			monthArr[monthIndex].down = newItem;
-			monthDown(newItem,dayIndex,monthIndex,day);
+		    if(isOccupied(day,month)){
+                Item dNode=dayArr[dayIndex],mNode=monthArr[monthIndex],prevDay=dayArr[dayIndex],prevMonth=monthArr[monthIndex],currItem=null;
+                while(mNode!=null){
+                    dNode=dayArr[dayIndex];
+                    while (dNode!=null){
+                        if(dNode==mNode){
+                            currItem=dNode;
+                            break;
+                        }else{
+                            dNode=dNode.right;
+                        }
+                    }
+                    mNode=mNode.down;
+                }
+                dNode=dayArr[dayIndex].right;
+                mNode=monthArr[monthIndex].down;
+                while (mNode!=null){
+                    if(mNode==currItem){
+                        break;
+                    }else{
+                        prevMonth=mNode;
+                        mNode=mNode.down;
+                    }
+                }
+                while (dNode!=null){
+                    if(dNode==currItem){
+                        break;
+                    }else{
+                        prevDay=dNode;
+                        dNode=dNode.right;
+                    }
+                }
+                if(dNode==null||mNode==null){
+                    return;
+                }else{
+                    LoopBack(newItem,currItem,prevDay,prevMonth);
+                }
+
+
+            }else {
+                monthArr[monthIndex].down = newItem;
+                monthDown(newItem, dayIndex, monthIndex, day);
+            }
 
 		} else {    //if both month and day are not empty
 			if (!isOccupied(day, month)) {    //no item is already in the slot
@@ -695,7 +775,10 @@ public class Calendar
 			if(curr.getPriority()>newNode.getPriority()){
 				curr.back=newNode;
 				return;
-			}else{
+			}else if(curr.getPriority()==newNode.getPriority()){
+			    curr.back=newNode;
+			    return;
+            }else{
 				newNode.right = curr.right;
 				newNode.down = curr.down;
 				newNode.back = curr;
